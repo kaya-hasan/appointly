@@ -30,3 +30,7 @@ async def update_customer(
     db: Session = Depends(get_db),
 ):
     return customer_service.update_customer(db, customer_id, customer)
+
+@router.delete("/{customer_id}", status_code=204)
+async def delete_customer(customer_id: int, db: Session = Depends(get_db)):
+    customer_service.delete_customer(db, customer_id)

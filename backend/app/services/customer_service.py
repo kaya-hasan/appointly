@@ -3,7 +3,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from app.models.customer import Customer
 from app.schemas import CustomerCreate
-
+from app.models.appointment import Appointment
 
 def list_customers(db: Session):
     return db.query(Customer).all()
@@ -30,4 +30,12 @@ def update_customer(db: Session, customer_id: int, customer_data: CustomerUpdate
         setattr(customer, field, value)
     db.commit()
     db.refresh(customer)
+    return customer
+
+def delete_customer(db: Session, customer_id: int):
+    customer = get_customer_by_id(db, customer_id)
+    if db.query(Appointment).filter(Appointment.customer_id == customer_id).first():
+        raise HTTPException(status_code=409, detail="Customer has appointments")
+    db.delete(customer)
+    db.commit()
     return customer
