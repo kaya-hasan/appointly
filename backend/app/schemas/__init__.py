@@ -4,6 +4,7 @@ from app.schemas.appointment import (
     AppointmentCreate,
     AppointmentRead,
     AppointmentStatusUpdate,
+    AppointmentUpdate
 )
 
 __all__ = [
@@ -15,4 +16,5 @@ __all__ = [
     "AppointmentCreate",
     "AppointmentRead",
     "AppointmentStatusUpdate",
+    "AppointmentUpdate",
 ]

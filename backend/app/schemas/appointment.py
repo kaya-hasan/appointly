@@ -25,3 +25,11 @@ class AppointmentRead(AppointmentBase):
 
 class AppointmentStatusUpdate(BaseModel):
     status: str
+
+class AppointmentUpdate(BaseModel):
+    customer_id: Optional[int] = None
+    appointment_date: Optional[date] = None
+    start_time: Optional[time] = None
+    end_time: Optional[time] = None
+    service_type: Optional[str] = None
+    status: Optional[str] = None
