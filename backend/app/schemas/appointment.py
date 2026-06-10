@@ -22,3 +22,6 @@ class AppointmentRead(AppointmentBase):
     service_type: str
     status: Optional[str] = None
     model_config = {"from_attributes": True}
+
+class AppointmentStatusUpdate(BaseModel):
+    status: str

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends
-from app.schemas.appointment import AppointmentCreate, AppointmentRead
+from app.schemas.appointment import AppointmentCreate, AppointmentRead, AppointmentStatusUpdate
 from app.db.database import get_db
 from app.services import appointment_service
 
@@ -17,3 +17,18 @@ async def create_appointment(
     db: Session = Depends(get_db),
 ):
     return appointment_service.create_appointment(db, appointment)
+
+@router.get("/{appointment_id}", response_model=AppointmentRead)
+async def get_appointment(
+    appointment_id: int,
+    db: Session = Depends(get_db),
+):
+    return appointment_service.get_appointment_by_id(db, appointment_id)
+
+@router.patch("/{appointment_id}/status", response_model=AppointmentRead)
+async def update_appointment_status(
+    appointment_id: int,
+    appointment_status_data: AppointmentStatusUpdate,
+    db: Session = Depends(get_db),
+):
+    return appointment_service.update_appointment_status(db, appointment_id, appointment_status_data)
