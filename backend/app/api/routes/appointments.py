@@ -32,3 +32,10 @@ async def update_appointment_status(
     db: Session = Depends(get_db),
 ):
     return appointment_service.update_appointment_status(db, appointment_id, appointment_status_data)
+
+@router.delete("/{appointment_id}", status_code=204)
+async def delete_appointment(
+    appointment_id: int,
+    db: Session = Depends(get_db),
+):
+    appointment_service.delete_appointment(db, appointment_id)

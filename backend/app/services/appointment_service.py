@@ -54,3 +54,11 @@ def update_appointment_status(db: Session, appointment_id: int, appointment_stat
     db.commit()
     db.refresh(appointment)
     return appointment
+
+def delete_appointment(db: Session, appointment_id: int):
+    appointment = db.query(Appointment).filter(Appointment.id == appointment_id).first()
+    if not appointment:
+        raise HTTPException(status_code=404, detail="Appointment not found")
+    db.delete(appointment)
+    db.commit()
+    return appointment
