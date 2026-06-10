@@ -17,3 +17,8 @@ class CustomerRead(CustomerBase):
     email: Optional[str] = None
     phone: str
     model_config = {"from_attributes": True}
+
+class CustomerUpdate(BaseModel):
+    name: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
