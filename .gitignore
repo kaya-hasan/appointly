@@ -4,4 +4,4 @@ backend/.pytest_cache/
 backend/.env
 frontend/node_modules/
 frontend/dist/
-
+jsconfig.json
