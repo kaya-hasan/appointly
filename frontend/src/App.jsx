@@ -1,5 +1,6 @@
 import HomePage from "./pages/HomePage.jsx"
 import MainLayout from "./layouts/MainLayout.jsx"
+import CustomersPage from "./pages/CustomersPage.jsx"
 import './App.css'
 
 function App() {
@@ -8,7 +9,7 @@ function App() {
     <div>
       <MainLayout>
 
-        <HomePage />
+        <CustomersPage />
       </MainLayout>
     </div>
   )
