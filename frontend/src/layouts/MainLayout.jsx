@@ -1,14 +1,24 @@
 import React from "react";
 
 const appName = "Appointly";
-const menu = ["Home", "Customers", "Appointments"]
+const menu = ["Home", "Customers", "Appointments"];
 
 const MainLayout = ({ children }) => {
   return (
     <div>
-      <h1>{appName}</h1>
-      <h2>{menu.map((item) => item)}</h2>
-      {children}
+      <header>
+        <h1>{appName}</h1>
+        <nav aria-label="Main navigation">
+          <ul>
+            {menu.map((item) => (
+              <li key={item}>
+                <button type="button">{item}</button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </header>
+      <main>{children}</main>
     </div>
   );
 };
