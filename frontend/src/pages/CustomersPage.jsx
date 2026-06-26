@@ -36,13 +36,17 @@ const CustomersPage = () => {
         <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
         <input type="text" placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} />
 
-        <button type="submit">Add</button>
+        <button type="submit">Add Customer</button>
       </form>
-      <ul>
-        {customers.map((customer) => (
-          <li key={customer.id}>{customer.name}</li>
-        ))}
-      </ul>
+      {customers.length === 0 ? (
+        <p>No customers yet.</p>
+      ) : (
+        <ul>
+          {customers.map((customer) => (
+            <li key={customer.id}>{customer.name}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };

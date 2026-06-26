@@ -48,14 +48,17 @@ const AppointmentsPage = () => {
         <input type="text" placeholder="Customer ID" value={customerId} onChange={(e) => setCustomerId(e.target.value)} />
         <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
 
-        <button type="submit">Add</button>
+        <button type="submit">Add Appointment</button>
       </form>
-      <ul>
-        {appointments.map((appointment) => (
-          <li key={appointment.id}>{appointment.service_type + " - " + appointment.appointment_date + " - " + appointment.start_time + " - " + appointment.status + " - " + appointment.customer_id + " - " + appointment.end_time}</li>
-        ))}
-
-      </ul>
+      {appointments.length === 0 ? (
+        <p>No appointments yet.</p>
+      ) : (
+        <ul>
+          {appointments.map((appointment) => (
+            <li key={appointment.id}>{appointment.service_type + " - " + appointment.appointment_date + " - " + appointment.start_time + " - " + appointment.status + " - " + appointment.customer_id + " - " + appointment.end_time}</li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 };
