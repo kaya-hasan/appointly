@@ -1,11 +1,11 @@
 import request from "./api";
 
 async function getAppointments() {
-  return request("appointments");
+  return request("appointments/");
 }
 
 async function createAppointment(data) {
-  return request("appointments", {
+  return request("appointments/", {
     method: "POST",
     body: JSON.stringify(data),
   });
