@@ -7,21 +7,28 @@ const CustomersPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [error, setError] = useState(null);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const customer = {
-      name,
-      email,
-      phone
+    const customer = { name, email, phone }
+
+    setError(null);
+    try {
+      await customerService.createCustomer(customer);
+      const updatedCustomers = await customerService.getCustomers();
+      setName("");
+      setEmail("");
+      setPhone("");
+      setCustomers(updatedCustomers);
+    } catch (error) {
+      if (error.message.includes("409")) {
+        setError("Customer already exists.");
+      } else {
+        setError("Failed to add customer.");
+      }
     }
 
-    await customerService.createCustomer(customer);
-    const updatedCustomers = await customerService.getCustomers();
-    setCustomers(updatedCustomers);
 
-    setName("");
-    setEmail("");
-    setPhone("");
   }
 
   useEffect(() => {
@@ -31,6 +38,7 @@ const CustomersPage = () => {
   return (
     <div>
       <h1>Customers</h1>
+      {error && <p>{error}</p>}
       <form action="" onSubmit={handleSubmit}>
         <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
         <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -43,7 +51,7 @@ const CustomersPage = () => {
       ) : (
         <ul>
           {customers.map((customer) => (
-            <li key={customer.id}>{customer.name}</li>
+            <li key={customer.id}>{customer.name} - {customer.email} - {customer.phone}</li>
           ))}
         </ul>
       )}
