@@ -53,16 +53,16 @@ const AppointmentsPage = () => {
       <h1>Appointments</h1>
       {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>
-        <input type="text" placeholder="Service Type" value={serviceType} onChange={(e) => setServiceType(e.target.value)} />
-        <input type="date" value={appointmentDate} onChange={(e) => setAppointmentDate(e.target.value)} />
-        <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} />
+        <input type="text" placeholder="Service Type" value={serviceType} onChange={(e) => setServiceType(e.target.value)} required />
+        <input type="date" value={appointmentDate} onChange={(e) => setAppointmentDate(e.target.value)} required />
+        <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
         <select value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value="pending">Pending</option>
           <option value="confirmed">Confirmed</option>
           <option value="cancelled">Cancelled</option>
         </select>
-        <input type="number" placeholder="Existing Customer ID" value={customerId} onChange={(e) => setCustomerId(e.target.value)} />
-        <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
+        <input type="number" placeholder="Existing Customer ID" value={customerId} onChange={(e) => setCustomerId(e.target.value)} required />
+        <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
 
         <button type="submit">Add Appointment</button>
       </form>
