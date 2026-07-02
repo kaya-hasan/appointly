@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import appointmentService from "../services/appointmentService";
+import customerService from "../services/customerService";
 
 const AppointmentsPage = () => {
   const [appointments, setAppointments] = useState([]);
@@ -10,6 +11,7 @@ const AppointmentsPage = () => {
   const [customerId, setCustomerId] = useState("");
   const [endTime, setEndTime] = useState("");
   const [error, setError] = useState(null);
+  const [customers, setCustomers] = useState([]);
 
 
   const handleSubmit = async (e) => {
@@ -43,9 +45,12 @@ const AppointmentsPage = () => {
       }
     }
   }
-
+  const getCustomerName = (customerId) => {
+    return customers.find((customer) => customer.id === customerId)?.name || "Unknown Customer";
+  }
   useEffect(() => {
     appointmentService.getAppointments().then(setAppointments);
+    customerService.getCustomers().then(setCustomers);
   }, []);
 
   return (
@@ -61,7 +66,14 @@ const AppointmentsPage = () => {
           <option value="confirmed">Confirmed</option>
           <option value="cancelled">Cancelled</option>
         </select>
-        <input type="number" placeholder="Existing Customer ID" value={customerId} onChange={(e) => setCustomerId(e.target.value)} required />
+        <select value={customerId} onChange={(e) => setCustomerId(e.target.value)} required>
+          <option value="">Select Customer</option>
+          {customers.map((customer) => (
+            <option key={customer.id} value={customer.id}>
+              {customer.name}
+            </option>
+          ))}
+        </select>
         <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
 
         <button type="submit">Add Appointment</button>
@@ -71,7 +83,7 @@ const AppointmentsPage = () => {
       ) : (
         <ul>
           {appointments.map((appointment) => (
-            <li key={appointment.id}>{appointment.service_type + " - " + appointment.appointment_date + " - " + appointment.start_time + " - " + appointment.end_time + " - " + appointment.status + " - " + "Customer ID: " + appointment.customer_id}</li>
+            <li key={appointment.id}>{appointment.service_type + " - " + appointment.appointment_date + " - " + appointment.start_time + " - " + appointment.end_time + " - " + appointment.status + " - " + getCustomerName(appointment.customer_id)}</li>
           ))}
         </ul>
       )}
