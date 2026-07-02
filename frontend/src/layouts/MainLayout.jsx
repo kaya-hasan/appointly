@@ -1,5 +1,5 @@
 import React from "react";
-
+import { NavLink } from "react-router-dom";
 const appName = "Appointly";
 const menu = ["Home", "Customers", "Appointments"];
 
@@ -12,7 +12,7 @@ const MainLayout = ({ children }) => {
           <ul>
             {menu.map((item) => (
               <li key={item}>
-                <button type="button">{item}</button>
+                <NavLink to={item === "Home" ? "/" : `/${item.toLowerCase()}`} className={({ isActive }) => isActive ? "active" : ""}>{item}</NavLink>
               </li>
             ))}
           </ul>
