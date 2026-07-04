@@ -51,7 +51,7 @@ const CustomersPage = () => {
       ) : (
         <ul>
           {customers.map((customer) => (
-            <li key={customer.id}>{customer.name} - {customer.email} - {customer.phone}</li>
+            <li key={customer.id}>{customer.name} - {customer.email || "No email"} - {customer.phone}</li>
           ))}
         </ul>
       )}
