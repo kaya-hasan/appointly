@@ -83,7 +83,7 @@ const AppointmentsPage = () => {
       ) : (
         <ul>
           {appointments.map((appointment) => (
-            <li key={appointment.id}>{appointment.service_type + " - " + appointment.appointment_date + " - " + appointment.start_time + " - " + appointment.end_time + " - " + appointment.status + " - " + getCustomerName(appointment.customer_id)}</li>
+            <li key={appointment.id}>{appointment.service_type + " - " + appointment.appointment_date + " - " + appointment.start_time + " to " + appointment.end_time + " - " + appointment.status + " - " + getCustomerName(appointment.customer_id)}</li>
           ))}
         </ul>
       )}
