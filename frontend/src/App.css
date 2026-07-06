@@ -187,3 +187,12 @@
   font-weight: bold;
   color: #2e9835;
 }
+
+.page-error {
+  color: #b42318;
+  background-color: #fef3f2;
+  border: 1px solid #fecdca;
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin: 12px 0;
+}

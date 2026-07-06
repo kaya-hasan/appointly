@@ -38,7 +38,7 @@ const CustomersPage = () => {
   return (
     <div>
       <h1>Customers</h1>
-      {error && <p>{error}</p>}
+      {error && <p className="page-error">{error}</p>}
       <form onSubmit={handleSubmit}>
         <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />

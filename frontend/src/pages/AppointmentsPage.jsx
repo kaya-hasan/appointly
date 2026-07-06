@@ -56,7 +56,7 @@ const AppointmentsPage = () => {
   return (
     <div>
       <h1>Appointments</h1>
-      {error && <p>{error}</p>}
+      {error && <p className="page-error">{error}</p>}
       <form onSubmit={handleSubmit}>
         <input type="text" placeholder="Service Type" value={serviceType} onChange={(e) => setServiceType(e.target.value)} required />
         <input type="date" value={appointmentDate} onChange={(e) => setAppointmentDate(e.target.value)} required />
