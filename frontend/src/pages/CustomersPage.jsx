@@ -41,8 +41,8 @@ const CustomersPage = () => {
       {error && <p>{error}</p>}
       <form onSubmit={handleSubmit}>
         <input type="text" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} required />
-        <input type="text" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="text" placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} required />
+        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="tel" placeholder="Phone" value={phone} onChange={(e) => setPhone(e.target.value)} required />
 
         <button type="submit">Add Customer</button>
       </form>
