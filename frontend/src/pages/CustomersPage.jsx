@@ -35,6 +35,20 @@ const CustomersPage = () => {
     customerService.getCustomers().then(setCustomers);
   }, []);
 
+  const handleDeleteCustomer = async (id) => {
+    setError(null);
+    try {
+      await customerService.deleteCustomer(id);
+      const updatedCustomers = await customerService.getCustomers();
+      setCustomers(updatedCustomers);
+    } catch (error) {
+      if (error.message.includes("409")) {
+        setError("This customer has appointments and cannot be deleted.");
+      } else {
+        setError("Failed to delete customer.");
+      }
+    }
+  };
   return (
     <div>
       <h1>Customers</h1>
@@ -51,11 +65,13 @@ const CustomersPage = () => {
       ) : (
         <ul>
           {customers.map((customer) => (
-            <li key={customer.id}>{customer.name} - {customer.email || "No email"} - {customer.phone}</li>
+            <li key={customer.id}>{customer.name} - {customer.email || "No email"} - {customer.phone} <button onClick={() => handleDeleteCustomer(customer.id)}>Delete</button>
+            </li>
           ))}
         </ul>
       )}
     </div>
+
   );
 };
 

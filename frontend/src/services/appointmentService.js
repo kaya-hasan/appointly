@@ -11,7 +11,14 @@ async function createAppointment(data) {
   });
 }
 
+async function deleteAppointment(id) {
+  return request(`appointments/${id}`, {
+    method: "DELETE",
+  });
+}
+
 export default {
   getAppointments,
   createAppointment,
+  deleteAppointment,
 };

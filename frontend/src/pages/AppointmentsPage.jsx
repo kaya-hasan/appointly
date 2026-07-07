@@ -53,6 +53,17 @@ const AppointmentsPage = () => {
     customerService.getCustomers().then(setCustomers);
   }, []);
 
+  const handleDeleteAppointment = async (id) => {
+    setError(null);
+    try {
+      await appointmentService.deleteAppointment(id);
+      const updatedAppointments = await appointmentService.getAppointments();
+      setAppointments(updatedAppointments);
+    } catch (error) {
+      setError("Failed to delete appointment.");
+    }
+  };
+
   return (
     <div>
       <h1>Appointments</h1>
@@ -83,7 +94,8 @@ const AppointmentsPage = () => {
       ) : (
         <ul>
           {appointments.map((appointment) => (
-            <li key={appointment.id}>{appointment.service_type + " - " + appointment.appointment_date + " - " + appointment.start_time + " to " + appointment.end_time + " - " + appointment.status + " - " + getCustomerName(appointment.customer_id)}</li>
+            <li key={appointment.id}>{appointment.service_type + " - " + appointment.appointment_date + " - " + appointment.start_time + " to " + appointment.end_time + " - " + appointment.status + " - " + getCustomerName(appointment.customer_id)} <button onClick={() => handleDeleteAppointment(appointment.id)}>Delete</button>
+            </li>
           ))}
         </ul>
       )}

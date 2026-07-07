@@ -11,7 +11,14 @@ async function createCustomer(data) {
   });
 }
 
+async function deleteCustomer(id) {
+  return request(`customers/${id}`, {
+    method: "DELETE",
+  });
+}
+
 export default {
   getCustomers,
   createCustomer,
+  deleteCustomer,
 };
