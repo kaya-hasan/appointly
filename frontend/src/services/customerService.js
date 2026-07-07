@@ -16,9 +16,16 @@ async function deleteCustomer(id) {
     method: "DELETE",
   });
 }
+async function updateCustomer(id, data) {
+  return request(`customers/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
 
 export default {
   getCustomers,
   createCustomer,
   deleteCustomer,
+  updateCustomer,
 };

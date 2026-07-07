@@ -16,9 +16,16 @@ async function deleteAppointment(id) {
     method: "DELETE",
   });
 }
+async function updateAppointment(id, data) {
+  return request(`appointments/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(data),
+  });
+}
 
 export default {
   getAppointments,
   createAppointment,
   deleteAppointment,
+  updateAppointment,
 };
