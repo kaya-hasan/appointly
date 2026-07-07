@@ -8,9 +8,18 @@ const CustomersPage = () => {
   const [phone, setPhone] = useState("");
   const [error, setError] = useState(null);
   const [editId, setEditId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    customerService.getCustomers().then(setCustomers);
+    setLoading(true);
+    customerService.getCustomers()
+      .then((data) => {
+        setCustomers(data);
+      }).catch(() => {
+        setError("Failed to fetch customers");
+      }).finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   const resetForm = () => {
@@ -113,7 +122,9 @@ const CustomersPage = () => {
         )}
       </form>
 
-      {customers.length === 0 ? (
+      {loading ? (
+        <p className="empty-state">Loading customers...</p>
+      ) : customers.length === 0 ? (
         <p className="empty-state">No customers yet.</p>
       ) : (
         <ul className="entity-list">
@@ -126,10 +137,10 @@ const CustomersPage = () => {
               </div>
               <div className="entity-actions">
                 <button className="secondary-button" type="button" onClick={() => handleDeleteCustomer(customer.id)}>
-                Delete
+                  Delete
                 </button>
                 <button className="primary-button" type="button" onClick={() => handleStartEdit(customer)}>
-                Edit
+                  Edit
                 </button>
               </div>
             </li>

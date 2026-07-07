@@ -13,10 +13,24 @@ const AppointmentsPage = () => {
   const [error, setError] = useState(null);
   const [customers, setCustomers] = useState([]);
   const [editId, setEditId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    appointmentService.getAppointments().then(setAppointments);
-    customerService.getCustomers().then(setCustomers);
+    setLoading(true);
+    Promise.all([
+      appointmentService.getAppointments(),
+      customerService.getCustomers(),
+    ])
+      .then(([appointmentsData, customersData]) => {
+        setAppointments(appointmentsData);
+        setCustomers(customersData);
+      })
+      .catch(() => {
+        setError("Failed to fetch data");
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   const resetForm = () => {
@@ -158,7 +172,9 @@ const AppointmentsPage = () => {
         )}
       </form>
 
-      {appointments.length === 0 ? (
+      {loading ? (
+        <p className="empty-state">Loading appointments...</p>
+      ) : appointments.length === 0 ? (
         <p className="empty-state">No appointments yet.</p>
       ) : (
         <ul className="entity-list">
@@ -172,10 +188,10 @@ const AppointmentsPage = () => {
               </div>
               <div className="entity-actions">
                 <button className="primary-button" type="button" onClick={() => handleStartEdit(appointment)}>
-                Edit
+                  Edit
                 </button>
                 <button className="secondary-button" type="button" onClick={() => handleDeleteAppointment(appointment.id)}>
-                Delete
+                  Delete
                 </button>
               </div>
             </li>
