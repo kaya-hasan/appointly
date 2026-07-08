@@ -14,6 +14,8 @@ const AppointmentsPage = () => {
   const [customers, setCustomers] = useState([]);
   const [editId, setEditId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -45,7 +47,6 @@ const AppointmentsPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const appointment = {
       service_type: serviceType,
       appointment_date: appointmentDate,
@@ -58,6 +59,7 @@ const AppointmentsPage = () => {
     setError(null);
 
     try {
+      setSubmitting(true);
       if (editId) {
         await appointmentService.updateAppointment(editId, appointment);
       } else {
@@ -75,6 +77,8 @@ const AppointmentsPage = () => {
       } else {
         setError("Failed to add appointment.");
       }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -87,13 +91,15 @@ const AppointmentsPage = () => {
 
   const handleDeleteAppointment = async (id) => {
     setError(null);
-
     try {
+      setDeletingId(id);
       await appointmentService.deleteAppointment(id);
       const updatedAppointments = await appointmentService.getAppointments();
       setAppointments(updatedAppointments);
     } catch (error) {
       setError("Failed to delete appointment.");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -162,11 +168,11 @@ const AppointmentsPage = () => {
           required
         />
 
-        <button className="primary-button" type="submit">
-          {editId ? "Update Appointment" : "Add Appointment"}
+        <button className="primary-button" type="submit" disabled={submitting}>
+          {submitting ? "Submitting..." : editId ? "Update Appointment" : "Add Appointment"}
         </button>
         {editId && (
-          <button className="secondary-button" type="button" onClick={handleCancelEdit}>
+          <button className="secondary-button" type="button" onClick={handleCancelEdit} disabled={submitting}>
             Cancel
           </button>
         )}
@@ -187,11 +193,11 @@ const AppointmentsPage = () => {
                 <p>{appointment.status} - {getCustomerName(appointment.customer_id)}</p>
               </div>
               <div className="entity-actions">
-                <button className="primary-button" type="button" onClick={() => handleStartEdit(appointment)}>
-                  Edit
+                <button className="primary-button" type="button" onClick={() => handleStartEdit(appointment)} disabled={submitting}>
+                  {"Edit"}
                 </button>
-                <button className="secondary-button" type="button" onClick={() => handleDeleteAppointment(appointment.id)}>
-                  Delete
+                <button className="secondary-button" type="button" onClick={() => handleDeleteAppointment(appointment.id)} disabled={deletingId === appointment.id}>
+                  {deletingId === appointment.id ? "Deleting..." : "Delete"}
                 </button>
               </div>
             </li>

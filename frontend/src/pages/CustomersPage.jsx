@@ -9,6 +9,8 @@ const CustomersPage = () => {
   const [error, setError] = useState(null);
   const [editId, setEditId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     setLoading(true);
@@ -36,6 +38,7 @@ const CustomersPage = () => {
     setError(null);
 
     try {
+      setSubmitting(true);
       if (editId) {
         await customerService.updateCustomer(editId, customer);
       } else {
@@ -53,13 +56,15 @@ const CustomersPage = () => {
       } else {
         setError("Failed to add customer.");
       }
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const handleDeleteCustomer = async (id) => {
     setError(null);
-
     try {
+      setDeletingId(id);
       await customerService.deleteCustomer(id);
       const updatedCustomers = await customerService.getCustomers();
       setCustomers(updatedCustomers);
@@ -69,6 +74,8 @@ const CustomersPage = () => {
       } else {
         setError("Failed to delete customer.");
       }
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -112,11 +119,11 @@ const CustomersPage = () => {
           required
         />
 
-        <button className="primary-button" type="submit">
-          {editId ? "Update Customer" : "Add Customer"}
+        <button className="primary-button" type="submit" disabled={submitting}>
+          {submitting ? "Submitting..." : editId ? "Update Customer" : "Add Customer"}
         </button>
         {editId && (
-          <button className="secondary-button" type="button" onClick={handleCancelEdit}>
+          <button className="secondary-button" type="button" onClick={handleCancelEdit} disabled={submitting}>
             Cancel
           </button>
         )}
@@ -136,11 +143,11 @@ const CustomersPage = () => {
                 <p>{customer.phone}</p>
               </div>
               <div className="entity-actions">
-                <button className="secondary-button" type="button" onClick={() => handleDeleteCustomer(customer.id)}>
-                  Delete
+                <button className="secondary-button" type="button" onClick={() => handleDeleteCustomer(customer.id)} disabled={deletingId === customer.id}>
+                  {deletingId === customer.id ? "Deleting..." : "Delete"}
                 </button>
-                <button className="primary-button" type="button" onClick={() => handleStartEdit(customer)}>
-                  Edit
+                <button className="primary-button" type="button" onClick={() => handleStartEdit(customer)} disabled={submitting}>
+                  {"Edit"}
                 </button>
               </div>
             </li>
