@@ -109,6 +109,18 @@
   gap: 16px;
 }
 
+.auth-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 560px;
+}
+
 .page-description {
   max-width: 720px;
 }
@@ -158,6 +170,10 @@
   gap: 12px;
   padding: 20px;
   max-width: 720px;
+}
+
+.auth-form {
+  max-width: 100%;
 }
 
 .entity-form input,
@@ -277,6 +293,11 @@
     padding: 24px 20px;
   }
 
+  .auth-page {
+    padding: 20px 16px;
+    align-items: start;
+  }
+
   .nav-list {
     flex-wrap: wrap;
   }
@@ -287,5 +308,9 @@
 
   .entity-actions {
     width: 100%;
+  }
+
+  .auth-card {
+    max-width: 100%;
   }
 }

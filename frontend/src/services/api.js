@@ -1,5 +1,6 @@
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 const TOKEN_STORAGE_KEY = "appointly_access_token";
+export const AUTH_EXPIRED_EVENT = "appointly:auth-expired";
 
 export function getStoredToken() {
   return localStorage.getItem(TOKEN_STORAGE_KEY);
@@ -44,6 +45,11 @@ async function request(endpoint, options = {}) {
   }
 
   if (!response.ok) {
+    if (response.status === 401) {
+      clearStoredToken();
+      window.dispatchEvent(new CustomEvent(AUTH_EXPIRED_EVENT));
+    }
+
     const error = new Error(data?.detail || `HTTP error! status: ${response.status}`);
     error.status = response.status;
     error.detail = data?.detail;

@@ -61,33 +61,37 @@ const LoginPage = ({ language, onAuthenticated }) => {
   };
 
   return (
-    <div className="page">
-      <h1>{content.title}</h1>
-      <p className="page-description">{content.description}</p>
-      {error && <p className={error === content.registered ? "empty-state" : "page-error"}>{error}</p>}
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="page">
+          <h1>{content.title}</h1>
+          <p className="page-description">{content.description}</p>
+          {error && <p className={error === content.registered ? "empty-state" : "page-error"}>{error}</p>}
 
-      <form className="entity-form" onSubmit={handleLogin}>
-        <input
-          type="email"
-          placeholder={content.email}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder={content.password}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button className="primary-button" type="submit" disabled={loading}>
-          {loading ? content.loadingLogin : content.login}
-        </button>
-        <button className="secondary-button" type="button" onClick={handleRegister} disabled={loading}>
-          {loading ? content.loadingRegister : content.register}
-        </button>
-      </form>
+          <form className="entity-form auth-form" onSubmit={handleLogin}>
+            <input
+              type="email"
+              placeholder={content.email}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <input
+              type="password"
+              placeholder={content.password}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <button className="primary-button" type="submit" disabled={loading}>
+              {loading ? content.loadingLogin : content.login}
+            </button>
+            <button className="secondary-button" type="button" onClick={handleRegister} disabled={loading}>
+              {loading ? content.loadingRegister : content.register}
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };

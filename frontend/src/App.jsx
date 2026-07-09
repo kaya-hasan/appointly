@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 import "./App.css";
@@ -8,7 +8,7 @@ import HomePage from "./pages/HomePage.jsx";
 import CustomersPage from "./pages/CustomersPage.jsx";
 import AppointmentsPage from "./pages/AppointmentsPage.jsx";
 import authService from "./services/authService";
-import { getStoredToken } from "./services/api";
+import { AUTH_EXPIRED_EVENT, getStoredToken } from "./services/api";
 
 function ProtectedApp({ language, setLanguage, onLogout }) {
   return (
@@ -31,6 +31,18 @@ function App() {
     authService.logout();
     setIsAuthenticated(false);
   };
+
+  useEffect(() => {
+    const handleAuthExpired = () => {
+      setIsAuthenticated(false);
+    };
+
+    window.addEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+
+    return () => {
+      window.removeEventListener(AUTH_EXPIRED_EVENT, handleAuthExpired);
+    };
+  }, []);
 
   if (!isAuthenticated) {
     return (
