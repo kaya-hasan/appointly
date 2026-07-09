@@ -79,6 +79,32 @@
   padding: 20px;
 }
 
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.stat-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--social-bg);
+  padding: 20px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 700;
+  color: var(--text-h);
+  line-height: 1;
+}
+
 .entity-form {
   display: grid;
   gap: 12px;
