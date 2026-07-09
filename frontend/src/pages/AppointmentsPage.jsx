@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import appointmentService from "../services/appointmentService";
 import customerService from "../services/customerService";
 
-const AppointmentsPage = () => {
+const AppointmentsPage = ({ language }) => {
   const [appointments, setAppointments] = useState([]);
   const [serviceType, setServiceType] = useState("");
   const [appointmentDate, setAppointmentDate] = useState("");
@@ -20,6 +20,66 @@ const AppointmentsPage = () => {
   const [serviceTypeFilter, setServiceTypeFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
 
+  const content = language === "tr"
+    ? {
+      title: "Randevular",
+      description: "Randevuları, durumlarını ve atanan müşterileri takip edin.",
+      fetchError: "Veriler alınamadı.",
+      existsError: "Randevu zaten mevcut.",
+      updateError: "Randevu güncellenemedi.",
+      addError: "Randevu eklenemedi.",
+      deleteError: "Randevu silinemedi.",
+      serviceType: "Hizmet Türü",
+      selectCustomer: "Müşteri Seç",
+      submitting: "Kaydediliyor...",
+      update: "Randevuyu Güncelle",
+      add: "Randevu Ekle",
+      cancel: "İptal",
+      searchService: "Hizmet türüne göre ara",
+      searchCustomer: "Müşteri adına göre ara",
+      allStatuses: "Tüm durumlar",
+      pending: "Bekliyor",
+      confirmed: "Onaylandı",
+      cancelled: "İptal Edildi",
+      loading: "Randevular yükleniyor...",
+      empty: "Henüz randevu yok.",
+      noMatch: "Eşleşen randevu bulunamadı.",
+      unknownCustomer: "Bilinmeyen Müşteri",
+      edit: "Düzenle",
+      delete: "Sil",
+      deleting: "Siliniyor...",
+      timeConnector: "-",
+    }
+    : {
+      title: "Appointments",
+      description: "Track bookings, statuses and assigned customers.",
+      fetchError: "Failed to fetch data.",
+      existsError: "Appointment already exists.",
+      updateError: "Failed to update appointment.",
+      addError: "Failed to add appointment.",
+      deleteError: "Failed to delete appointment.",
+      serviceType: "Service Type",
+      selectCustomer: "Select Customer",
+      submitting: "Submitting...",
+      update: "Update Appointment",
+      add: "Add Appointment",
+      cancel: "Cancel",
+      searchService: "Search by service type",
+      searchCustomer: "Search by customer name",
+      allStatuses: "All statuses",
+      pending: "Pending",
+      confirmed: "Confirmed",
+      cancelled: "Cancelled",
+      loading: "Loading appointments...",
+      empty: "No appointments yet.",
+      noMatch: "No matching appointments found.",
+      unknownCustomer: "Unknown Customer",
+      edit: "Edit",
+      delete: "Delete",
+      deleting: "Deleting...",
+      timeConnector: "to",
+    };
+
   useEffect(() => {
     setLoading(true);
     Promise.all([
@@ -31,12 +91,12 @@ const AppointmentsPage = () => {
         setCustomers(customersData);
       })
       .catch(() => {
-        setError("Failed to fetch data");
+        setError(content.fetchError);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [content.fetchError]);
 
   const resetForm = () => {
     setServiceType("");
@@ -74,11 +134,11 @@ const AppointmentsPage = () => {
       resetForm();
     } catch (error) {
       if (error.message.includes("409")) {
-        setError("Appointment already exists.");
+        setError(content.existsError);
       } else if (editId) {
-        setError("Failed to update appointment.");
+        setError(content.updateError);
       } else {
-        setError("Failed to add appointment.");
+        setError(content.addError);
       }
     } finally {
       setSubmitting(false);
@@ -88,7 +148,7 @@ const AppointmentsPage = () => {
   const getCustomerName = (customerId) => {
     return (
       customers.find((customer) => customer.id === customerId)?.name ||
-      "Unknown Customer"
+      content.unknownCustomer
     );
   };
 
@@ -100,7 +160,7 @@ const AppointmentsPage = () => {
       const updatedAppointments = await appointmentService.getAppointments();
       setAppointments(updatedAppointments);
     } catch (error) {
-      setError("Failed to delete appointment.");
+      setError(content.deleteError);
     } finally {
       setDeletingId(null);
     }
@@ -140,14 +200,14 @@ const AppointmentsPage = () => {
 
   return (
     <div className="page">
-      <h1>Appointments</h1>
-      <p className="page-description">Track bookings, statuses and assigned customers.</p>
+      <h1>{content.title}</h1>
+      <p className="page-description">{content.description}</p>
       {error && <p className="page-error">{error}</p>}
 
       <form className="entity-form" onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Service Type"
+          placeholder={content.serviceType}
           value={serviceType}
           onChange={(e) => setServiceType(e.target.value)}
           required
@@ -165,16 +225,16 @@ const AppointmentsPage = () => {
           required
         />
         <select value={status} onChange={(e) => setStatus(e.target.value)}>
-          <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="cancelled">Cancelled</option>
+          <option value="pending">{content.pending}</option>
+          <option value="confirmed">{content.confirmed}</option>
+          <option value="cancelled">{content.cancelled}</option>
         </select>
         <select
           value={customerId}
           onChange={(e) => setCustomerId(e.target.value)}
           required
         >
-          <option value="">Select Customer</option>
+          <option value="">{content.selectCustomer}</option>
           {customers.map((customer) => (
             <option key={customer.id} value={customer.id}>
               {customer.name}
@@ -189,11 +249,11 @@ const AppointmentsPage = () => {
         />
 
         <button className="primary-button" type="submit" disabled={submitting}>
-          {submitting ? "Submitting..." : editId ? "Update Appointment" : "Add Appointment"}
+          {submitting ? content.submitting : editId ? content.update : content.add}
         </button>
         {editId && (
           <button className="secondary-button" type="button" onClick={handleCancelEdit} disabled={submitting}>
-            Cancel
+            {content.cancel}
           </button>
         )}
       </form>
@@ -201,13 +261,13 @@ const AppointmentsPage = () => {
       <div className="search-bar">
         <input
           type="text"
-          placeholder="Search by service type"
+          placeholder={content.searchService}
           value={serviceTypeFilter}
           onChange={(e) => setServiceTypeFilter(e.target.value)}
         />
         <input
           type="text"
-          placeholder="Search by customer name"
+          placeholder={content.searchCustomer}
           value={searchName}
           onChange={(e) => setSearchName(e.target.value)}
         />
@@ -215,19 +275,19 @@ const AppointmentsPage = () => {
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
         >
-          <option value="">All statuses</option>
-          <option value="pending">Pending</option>
-          <option value="confirmed">Confirmed</option>
-          <option value="cancelled">Cancelled</option>
+          <option value="">{content.allStatuses}</option>
+          <option value="pending">{content.pending}</option>
+          <option value="confirmed">{content.confirmed}</option>
+          <option value="cancelled">{content.cancelled}</option>
         </select>
       </div>
 
       {loading ? (
-        <p className="empty-state">Loading appointments...</p>
+        <p className="empty-state">{content.loading}</p>
       ) : appointments.length === 0 ? (
-        <p className="empty-state">No appointments yet.</p>
+        <p className="empty-state">{content.empty}</p>
       ) : filteredAppointments.length === 0 ? (
-        <p className="empty-state">No matching appointments found.</p>
+        <p className="empty-state">{content.noMatch}</p>
       ) : (
         <ul className="entity-list">
           {filteredAppointments.map((appointment) => (
@@ -235,15 +295,15 @@ const AppointmentsPage = () => {
               <div>
                 <strong>{appointment.service_type}</strong>
                 <p>{appointment.appointment_date}</p>
-                <p>{appointment.start_time} to {appointment.end_time}</p>
+                <p>{appointment.start_time} {content.timeConnector} {appointment.end_time}</p>
                 <p>{appointment.status} - {getCustomerName(appointment.customer_id)}</p>
               </div>
               <div className="entity-actions">
                 <button className="primary-button" type="button" onClick={() => handleStartEdit(appointment)} disabled={submitting}>
-                  {"Edit"}
+                  {content.edit}
                 </button>
                 <button className="secondary-button" type="button" onClick={() => handleDeleteAppointment(appointment.id)} disabled={deletingId === appointment.id}>
-                  {deletingId === appointment.id ? "Deleting..." : "Delete"}
+                  {deletingId === appointment.id ? content.deleting : content.delete}
                 </button>
               </div>
             </li>
