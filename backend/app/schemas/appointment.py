@@ -1,7 +1,7 @@
 from datetime import date, time
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class AppointmentBase(BaseModel):
@@ -11,6 +11,18 @@ class AppointmentBase(BaseModel):
     end_time: time
     service_type: str = Field(min_length=2, max_length=120)
     status: Optional[str] = Field(default="pending", pattern="^(pending|confirmed|cancelled)$")
+
+    @field_validator("service_type")
+    @classmethod
+    def normalize_service_type(cls, value: str) -> str:
+        return value.strip()
+
+    @field_validator("status")
+    @classmethod
+    def normalize_status(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        return value.strip().lower()
 
 
 class AppointmentCreate(AppointmentBase):
@@ -32,6 +44,11 @@ class AppointmentListResponse(BaseModel):
 class AppointmentStatusUpdate(BaseModel):
     status: str = Field(pattern="^(pending|confirmed|cancelled)$")
 
+    @field_validator("status")
+    @classmethod
+    def normalize_status(cls, value: str) -> str:
+        return value.strip().lower()
+
 
 class AppointmentUpdate(BaseModel):
     customer_id: Optional[int] = None
@@ -40,3 +57,17 @@ class AppointmentUpdate(BaseModel):
     end_time: Optional[time] = None
     service_type: Optional[str] = Field(default=None, min_length=2, max_length=120)
     status: Optional[str] = Field(default=None, pattern="^(pending|confirmed|cancelled)$")
+
+    @field_validator("service_type")
+    @classmethod
+    def normalize_service_type(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        return value.strip()
+
+    @field_validator("status")
+    @classmethod
+    def normalize_status(cls, value: Optional[str]) -> Optional[str]:
+        if value is None:
+            return None
+        return value.strip().lower()

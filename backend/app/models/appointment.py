@@ -11,6 +11,10 @@ class Appointment(Base):
             "status IN ('pending', 'confirmed', 'cancelled')",
             name="ck_appointments_status",
         ),
+        CheckConstraint(
+            "end_time > start_time",
+            name="ck_appointments_time_order",
+        ),
     )
 
     id = Column(Integer, primary_key=True, index=True)
