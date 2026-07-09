@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 const appName = "Appointly";
 
-const MainLayout = ({ children, language, setLanguage }) => {
+const MainLayout = ({ children, language, setLanguage, onLogout }) => {
   const menu = language === "tr"
     ? [
       { label: "Ana Sayfa", path: "/" },
@@ -19,6 +19,7 @@ const MainLayout = ({ children, language, setLanguage }) => {
     language === "tr" ? "Randevu Yönetimi" : "Appointment Management";
 
   const languageLabel = language === "tr" ? "Dil" : "Language";
+  const logoutLabel = language === "tr" ? "Çıkış" : "Logout";
 
   return (
     <div className="app-shell">
@@ -42,6 +43,9 @@ const MainLayout = ({ children, language, setLanguage }) => {
                 EN
               </button>
             </div>
+            <button className="secondary-button logout-button" type="button" onClick={onLogout}>
+              {logoutLabel}
+            </button>
           </div>
         </div>
         <div>

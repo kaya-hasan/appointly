@@ -102,7 +102,7 @@ const CustomersPage = ({ language }) => {
       setCustomers(updatedCustomers);
       resetForm();
     } catch (error) {
-      if (!editId && error.message.includes("409")) {
+      if (!editId && error.status === 409) {
         setError(content.existsError);
       } else if (editId) {
         setError(content.updateError);
@@ -122,7 +122,7 @@ const CustomersPage = ({ language }) => {
       const updatedCustomers = await customerService.getCustomers();
       setCustomers(updatedCustomers);
     } catch (error) {
-      if (error.message.includes("409")) {
+      if (error.status === 409) {
         setError(content.deleteBlocked);
       } else {
         setError(content.deleteError);

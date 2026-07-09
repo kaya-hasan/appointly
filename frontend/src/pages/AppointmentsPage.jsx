@@ -133,7 +133,7 @@ const AppointmentsPage = ({ language }) => {
       setAppointments(updatedAppointments);
       resetForm();
     } catch (error) {
-      if (error.message.includes("409")) {
+      if (error.status === 409) {
         setError(content.existsError);
       } else if (editId) {
         setError(content.updateError);
@@ -296,7 +296,7 @@ const AppointmentsPage = ({ language }) => {
                 <strong>{appointment.service_type}</strong>
                 <p>{appointment.appointment_date}</p>
                 <p>{appointment.start_time} {content.timeConnector} {appointment.end_time}</p>
-                <p>{appointment.status} - {getCustomerName(appointment.customer_id)}</p>
+                <p>{(language === "tr" ? { pending: "Bekliyor", confirmed: "Onaylandı", cancelled: "İptal Edildi" } : { pending: "Pending", confirmed: "Confirmed", cancelled: "Cancelled" })[appointment.status] || appointment.status} - {getCustomerName(appointment.customer_id)}</p>
               </div>
               <div className="entity-actions">
                 <button className="primary-button" type="button" onClick={() => handleStartEdit(appointment)} disabled={submitting}>

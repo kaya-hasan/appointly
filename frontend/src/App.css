@@ -57,6 +57,10 @@
   color: white;
 }
 
+.logout-button {
+  margin-inline-start: 6px;
+}
+
 .app-eyebrow {
   color: #2e9835;
   font-size: 14px;

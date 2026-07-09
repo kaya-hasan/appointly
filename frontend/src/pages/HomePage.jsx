@@ -43,8 +43,8 @@ const HomePage = ({ language }) => {
         setCustomers(customers);
         setAppointments(appointments);
       })
-      .catch(() => {
-        setError(content.error);
+      .catch((err) => {
+        setError(err?.detail || content.error);
       })
       .finally(() => {
         setLoading(false);

@@ -1,24 +1,24 @@
-
-from pydantic import BaseModel
 from typing import Optional
 
+from pydantic import BaseModel, EmailStr, Field
+
+
 class CustomerBase(BaseModel):
-    name: str
-    email: Optional[str] = None
-    phone: str
+    name: str = Field(min_length=2, max_length=120)
+    email: Optional[EmailStr] = None
+    phone: str = Field(min_length=7, max_length=30)
 
 
 class CustomerCreate(CustomerBase):
-  pass
+    pass
+
 
 class CustomerRead(CustomerBase):
     id: int
-    name: str
-    email: Optional[str] = None
-    phone: str
     model_config = {"from_attributes": True}
 
+
 class CustomerUpdate(BaseModel):
-    name: Optional[str] = None
-    email: Optional[str] = None
-    phone: Optional[str] = None
+    name: Optional[str] = Field(default=None, min_length=2, max_length=120)
+    email: Optional[EmailStr] = None
+    phone: Optional[str] = Field(default=None, min_length=7, max_length=30)

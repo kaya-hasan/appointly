@@ -4,8 +4,9 @@ from app.schemas.appointment import (
     AppointmentCreate,
     AppointmentRead,
     AppointmentStatusUpdate,
-    AppointmentUpdate
+    AppointmentUpdate,
 )
+from app.schemas.user import Token, UserBase, UserCreate, UserLogin, UserRead
 
 __all__ = [
     "CustomerBase",
@@ -17,4 +18,9 @@ __all__ = [
     "AppointmentRead",
     "AppointmentStatusUpdate",
     "AppointmentUpdate",
+    "UserBase",
+    "UserCreate",
+    "UserLogin",
+    "UserRead",
+    "Token",
 ]
