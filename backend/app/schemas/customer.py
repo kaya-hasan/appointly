@@ -18,6 +18,13 @@ class CustomerRead(CustomerBase):
     model_config = {"from_attributes": True}
 
 
+class CustomerListResponse(BaseModel):
+    items: list[CustomerRead]
+    total: int
+    limit: int
+    offset: int
+
+
 class CustomerUpdate(BaseModel):
     name: Optional[str] = Field(default=None, min_length=2, max_length=120)
     email: Optional[EmailStr] = None

@@ -9,7 +9,8 @@ from app.schemas.customer import CustomerCreate, CustomerUpdate
 
 
 def list_customers(db: Session, owner_id: int, limit: int = 50, offset: int = 0):
-    return (
+    total = db.query(Customer).filter(Customer.owner_id == owner_id).count()
+    items = (
         db.query(Customer)
         .filter(Customer.owner_id == owner_id)
         .order_by(Customer.id.asc())
@@ -17,6 +18,12 @@ def list_customers(db: Session, owner_id: int, limit: int = 50, offset: int = 0)
         .limit(limit)
         .all()
     )
+    return {
+        "items": items,
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+    }
 
 
 def create_customer(db: Session, customer_data: CustomerCreate, current_user: User):

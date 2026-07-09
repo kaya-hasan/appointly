@@ -12,7 +12,8 @@ from app.schemas.appointment import (
 
 
 def list_appointments(db: Session, owner_id: int, limit: int = 50, offset: int = 0):
-    return (
+    total = db.query(Appointment).filter(Appointment.owner_id == owner_id).count()
+    items = (
         db.query(Appointment)
         .filter(Appointment.owner_id == owner_id)
         .order_by(
@@ -24,6 +25,12 @@ def list_appointments(db: Session, owner_id: int, limit: int = 50, offset: int =
         .limit(limit)
         .all()
     )
+    return {
+        "items": items,
+        "total": total,
+        "limit": limit,
+        "offset": offset,
+    }
 
 
 def create_appointment(db: Session, appointment_data: AppointmentCreate, current_user: User):

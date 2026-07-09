@@ -4,6 +4,7 @@ import customerService from "../services/customerService";
 
 const AppointmentsPage = ({ language }) => {
   const [appointments, setAppointments] = useState([]);
+  const [appointmentTotal, setAppointmentTotal] = useState(0);
   const [serviceType, setServiceType] = useState("");
   const [appointmentDate, setAppointmentDate] = useState("");
   const [startTime, setStartTime] = useState("");
@@ -87,8 +88,9 @@ const AppointmentsPage = ({ language }) => {
       customerService.getCustomers(),
     ])
       .then(([appointmentsData, customersData]) => {
-        setAppointments(appointmentsData);
-        setCustomers(customersData);
+        setAppointments(appointmentsData.items);
+        setAppointmentTotal(appointmentsData.total);
+        setCustomers(customersData.items);
       })
       .catch(() => {
         setError(content.fetchError);
@@ -130,7 +132,8 @@ const AppointmentsPage = ({ language }) => {
       }
 
       const updatedAppointments = await appointmentService.getAppointments();
-      setAppointments(updatedAppointments);
+      setAppointments(updatedAppointments.items);
+      setAppointmentTotal(updatedAppointments.total);
       resetForm();
     } catch (error) {
       if (error.status === 409) {
@@ -158,7 +161,8 @@ const AppointmentsPage = ({ language }) => {
       setDeletingId(id);
       await appointmentService.deleteAppointment(id);
       const updatedAppointments = await appointmentService.getAppointments();
-      setAppointments(updatedAppointments);
+      setAppointments(updatedAppointments.items);
+      setAppointmentTotal(updatedAppointments.total);
     } catch (error) {
       setError(content.deleteError);
     } finally {
@@ -284,7 +288,7 @@ const AppointmentsPage = ({ language }) => {
 
       {loading ? (
         <p className="empty-state">{content.loading}</p>
-      ) : appointments.length === 0 ? (
+      ) : appointmentTotal === 0 ? (
         <p className="empty-state">{content.empty}</p>
       ) : filteredAppointments.length === 0 ? (
         <p className="empty-state">{content.noMatch}</p>

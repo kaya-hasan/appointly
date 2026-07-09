@@ -6,6 +6,7 @@ from app.db.database import get_db
 from app.models.user import User
 from app.schemas.appointment import (
     AppointmentCreate,
+    AppointmentListResponse,
     AppointmentRead,
     AppointmentStatusUpdate,
     AppointmentUpdate,
@@ -15,7 +16,7 @@ from app.services import appointment_service
 router = APIRouter(prefix="/appointments", tags=["Appointments"])
 
 
-@router.get("/", response_model=list[AppointmentRead])
+@router.get("/", response_model=AppointmentListResponse)
 async def read_appointments(
     limit: int = Query(default=50, le=100),
     offset: int = Query(default=0, ge=0),

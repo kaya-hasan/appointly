@@ -1,7 +1,19 @@
 import request from "./api";
 
-async function getAppointments() {
-  return request("appointments/");
+async function getAppointments(params = {}) {
+  const searchParams = new URLSearchParams();
+
+  if (params.limit !== undefined) {
+    searchParams.set("limit", String(params.limit));
+  }
+
+  if (params.offset !== undefined) {
+    searchParams.set("offset", String(params.offset));
+  }
+
+  const query = searchParams.toString();
+  const endpoint = query ? `appointments/?${query}` : "appointments/";
+  return request(endpoint);
 }
 
 async function createAppointment(data) {

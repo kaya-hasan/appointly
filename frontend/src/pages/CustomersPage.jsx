@@ -3,6 +3,7 @@ import customerService from "../services/customerService";
 
 const CustomersPage = ({ language }) => {
   const [customers, setCustomers] = useState([]);
+  const [customerTotal, setCustomerTotal] = useState(0);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -69,7 +70,8 @@ const CustomersPage = ({ language }) => {
     setLoading(true);
     customerService.getCustomers()
       .then((data) => {
-        setCustomers(data);
+        setCustomers(data.items);
+        setCustomerTotal(data.total);
       }).catch(() => {
         setError(content.fetchError);
       }).finally(() => {
@@ -99,7 +101,8 @@ const CustomersPage = ({ language }) => {
       }
 
       const updatedCustomers = await customerService.getCustomers();
-      setCustomers(updatedCustomers);
+      setCustomers(updatedCustomers.items);
+      setCustomerTotal(updatedCustomers.total);
       resetForm();
     } catch (error) {
       if (!editId && error.status === 409) {
@@ -120,7 +123,8 @@ const CustomersPage = ({ language }) => {
       setDeletingId(id);
       await customerService.deleteCustomer(id);
       const updatedCustomers = await customerService.getCustomers();
-      setCustomers(updatedCustomers);
+      setCustomers(updatedCustomers.items);
+      setCustomerTotal(updatedCustomers.total);
     } catch (error) {
       if (error.status === 409) {
         setError(content.deleteBlocked);
@@ -199,7 +203,7 @@ const CustomersPage = ({ language }) => {
 
       {loading ? (
         <p className="empty-state">{content.loading}</p>
-      ) : customers.length === 0 ? (
+      ) : customerTotal === 0 ? (
         <p className="empty-state">{content.empty}</p>
       ) : filteredCustomers.length === 0 ? (
         <p className="empty-state">{content.noMatch}</p>

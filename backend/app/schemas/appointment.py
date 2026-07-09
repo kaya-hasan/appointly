@@ -22,6 +22,13 @@ class AppointmentRead(AppointmentBase):
     model_config = {"from_attributes": True}
 
 
+class AppointmentListResponse(BaseModel):
+    items: list[AppointmentRead]
+    total: int
+    limit: int
+    offset: int
+
+
 class AppointmentStatusUpdate(BaseModel):
     status: str = Field(pattern="^(pending|confirmed|cancelled)$")
 

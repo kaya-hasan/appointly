@@ -4,14 +4,14 @@ from sqlalchemy.orm import Session
 from app.api.deps import get_current_user
 from app.db.database import get_db
 from app.models.user import User
-from app.schemas.customer import CustomerCreate, CustomerRead
+from app.schemas.customer import CustomerCreate, CustomerListResponse, CustomerRead
 from app.schemas.customer import CustomerUpdate
 from app.services import customer_service
 
 router = APIRouter(prefix="/customers", tags=["Customers"])
 
 
-@router.get("/", response_model=list[CustomerRead])
+@router.get("/", response_model=CustomerListResponse)
 async def read_customers(
     limit: int = Query(default=50, le=100),
     offset: int = Query(default=0, ge=0),
