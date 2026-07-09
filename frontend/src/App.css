@@ -68,7 +68,8 @@
 .info-card,
 .entity-form,
 .entity-item,
-.empty-state {
+.empty-state,
+.search-bar {
   border: 1px solid var(--border);
   border-radius: 14px;
   background: var(--social-bg);
@@ -87,6 +88,8 @@
 
 .entity-form input,
 .entity-form select,
+.search-bar input,
+.search-bar select,
 .primary-button,
 .secondary-button {
   font: inherit;
@@ -95,7 +98,9 @@
 }
 
 .entity-form input,
-.entity-form select {
+.entity-form select,
+.search-bar input,
+.search-bar select {
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text-h);
@@ -156,6 +161,14 @@
 
 .empty-state {
   padding: 18px 20px;
+}
+
+.search-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  padding: 16px 20px;
+  max-width: 720px;
 }
 
 .active {

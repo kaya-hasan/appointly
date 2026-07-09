@@ -16,6 +16,9 @@ const AppointmentsPage = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
+  const [searchName, setSearchName] = useState("");
+  const [serviceTypeFilter, setServiceTypeFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -118,6 +121,23 @@ const AppointmentsPage = () => {
     setError(null);
   };
 
+  const filteredAppointments = appointments.filter((appointment) => {
+    const serviceQuery = serviceTypeFilter.toLowerCase();
+    const customerQuery = searchName.toLowerCase();
+    const customerName = getCustomerName(appointment.customer_id).toLowerCase();
+
+    const matchesService = appointment.service_type
+      .toLowerCase()
+      .includes(serviceQuery);
+
+    const matchesCustomer = customerName.includes(customerQuery);
+
+    const matchesStatus =
+      statusFilter === "" || appointment.status === statusFilter;
+
+    return matchesService && matchesCustomer && matchesStatus;
+  });
+
   return (
     <div className="page">
       <h1>Appointments</h1>
@@ -178,13 +198,39 @@ const AppointmentsPage = () => {
         )}
       </form>
 
+      <div className="search-bar">
+        <input
+          type="text"
+          placeholder="Search by service type"
+          value={serviceTypeFilter}
+          onChange={(e) => setServiceTypeFilter(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Search by customer name"
+          value={searchName}
+          onChange={(e) => setSearchName(e.target.value)}
+        />
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="">All statuses</option>
+          <option value="pending">Pending</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+
       {loading ? (
         <p className="empty-state">Loading appointments...</p>
       ) : appointments.length === 0 ? (
         <p className="empty-state">No appointments yet.</p>
+      ) : filteredAppointments.length === 0 ? (
+        <p className="empty-state">No matching appointments found.</p>
       ) : (
         <ul className="entity-list">
-          {appointments.map((appointment) => (
+          {filteredAppointments.map((appointment) => (
             <li key={appointment.id} className="entity-item">
               <div>
                 <strong>{appointment.service_type}</strong>

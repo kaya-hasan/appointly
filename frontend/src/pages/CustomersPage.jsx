@@ -11,6 +11,7 @@ const CustomersPage = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
+  const [searchName, setSearchName] = useState("");
 
   useEffect(() => {
     setLoading(true);
@@ -91,6 +92,17 @@ const CustomersPage = () => {
     setError(null);
   };
 
+  const filteredCustomers = customers.filter((customer) => {
+    const query = searchName.toLowerCase();
+    return (
+      customer.name.toLowerCase().includes(query) ||
+      customer.phone?.toLowerCase().includes(query)
+    );
+  });
+
+
+
+
   return (
     <div className="page">
       <h1>Customers</h1>
@@ -127,15 +139,21 @@ const CustomersPage = () => {
             Cancel
           </button>
         )}
+
       </form>
+      <div className="search-bar">
+        <input type="text" placeholder="Search by name or phone number" value={searchName} onChange={(e) => setSearchName(e.target.value)} />
+      </div>
 
       {loading ? (
         <p className="empty-state">Loading customers...</p>
       ) : customers.length === 0 ? (
         <p className="empty-state">No customers yet.</p>
+      ) : filteredCustomers.length === 0 ? (
+        <p className="empty-state">No matching customers found.</p>
       ) : (
         <ul className="entity-list">
-          {customers.map((customer) => (
+          {filteredCustomers.map((customer) => (
             <li key={customer.id} className="entity-item">
               <div>
                 <strong>{customer.name}</strong>
