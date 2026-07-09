@@ -1,88 +1,246 @@
 # Appointly
 
-İşletmeler ve kuaförler için geliştirilmiş bir randevu yönetim sistemi.
+Appointly is a full-stack appointment management system for small businesses and hair salons.
 
-Bu proje, müşteri kayıtlarını ve randevu süreçlerini tek panel üzerinden yönetmeyi amaçlar.
+It helps a business owner manage:
+- customers
+- appointments
+- appointment statuses
+- daily booking flow
 
-Backend tarafında FastAPI, frontend tarafında React kullanılmıştır.
+The project is built as a portfolio-oriented MVP with production-readiness improvements on top of the core CRUD flow.
 
-## Features
+## Highlights
 
-- Customer create, list, update and delete operations
-- Appointment create, list, update and delete operations
-- Appointment status tracking
-- Search and filter support on frontend
-- Simple dashboard overview on homepage
+- JWT-based authentication
+- Owner-scoped customer and appointment data
+- Appointment conflict prevention
+- PostgreSQL + Alembic migration flow
+- React dashboard and management screens
+- Search and filter support on the frontend
+- Basic security hardening for local-to-production transition
 
 ## Tech Stack
 
-- Backend: FastAPI
-- Database: PostgreSQL
-- ORM: SQLAlchemy
-- Migrations: Alembic
-- Frontend: React + Vite
+### Backend
+- FastAPI
+- SQLAlchemy
+- PostgreSQL
+- Alembic
+- Pydantic
+
+### Frontend
+- React
+- Vite
+- React Router
+
+## Core Features
+
+### Authentication
+- User registration
+- User login
+- JWT access token
+- Protected API routes
+
+### Customers
+- Create customer
+- List customers
+- Update customer
+- Delete customer
+- Prevent delete when related appointments exist
+
+### Appointments
+- Create appointment
+- List appointments
+- Update appointment
+- Update appointment status
+- Delete appointment
+- Prevent overlapping appointments for the same owner
+
+### Frontend
+- Dashboard overview
+- Customer management page
+- Appointment management page
+- Search and filter tools
+- TR / EN language toggle
+- Automatic logout on expired or invalid token
+
+## Security and Data Integrity
+
+The current version includes these practical protections:
+
+- Password hashing with `bcrypt`
+- JWT-based route protection
+- Owner-based data isolation
+- Input validation with Pydantic
+- Basic rate limiting middleware
+- Configurable CORS origins
+- DB-level appointment overlap protection
+- DB check constraint for appointment time order
+- Duplicate customer protection per owner
 
 ## Project Structure
 
-Proje iki ana klasörden oluşur:
+```text
+appointly/
+├── backend/
+│   ├── alembic/
+│   ├── app/
+│   │   ├── api/
+│   │   ├── core/
+│   │   ├── db/
+│   │   ├── models/
+│   │   ├── schemas/
+│   │   └── services/
+│   └── requirements.txt
+├── frontend/
+│   ├── src/
+│   │   ├── layouts/
+│   │   ├── pages/
+│   │   └── services/
+│   └── package.json
+└── README.md
+```
 
-- backend: FastAPI tabanlı API ve veritabanı katmanı
-- frontend: React + Vite tabanlı kullanıcı arayüzü
+## Local Setup
 
-## Setup
+### 1. Clone the repository
 
-Projeyi lokal ortamda çalıştırmak için backend ve frontend taraflarını ayrı ayrı kurmanız gerekir.
+```bash
+git clone https://github.com/kaya-hasan/appointly.git
+cd appointly
+```
 
-- PostgreSQL veritabanı oluşturun
-- Backend bağımlılıklarını kurun
-- Frontend bağımlılıklarını kurun
-- Backend ve frontend sunucularını ayrı terminallerde çalıştırın
+### 2. Backend setup
 
-Kurulum ve çalıştırma adımları aşağıda ayrı başlıklar altında verilmiştir.
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
 
-## Backend Setup
+Create a `.env` file in `backend/` based on `.env.example`.
 
-Backend tarafını çalıştırmak için aşağıdaki adımları izleyin:
+Then run:
 
-- backend klasörüne girin
-- sanal ortam oluşturun
-- sanal ortamı aktif edin
-- bağımlılıkları yükleyin
-- PostgreSQL bağlantı ayarlarını yapılandırın
-- migration işlemlerini çalıştırın
-- FastAPI sunucusunu başlatın
+```bash
+alembic upgrade head
+uvicorn app.main:app --reload
+```
 
-Örnek komut sırası:
+Backend default local URL:
 
-- `cd backend`
-- `python -m venv .venv`
-- `source .venv/bin/activate`
-- `pip install -r requirements.txt`
-- `alembic upgrade head`
-- `uvicorn app.main:app --reload`
+```text
+http://127.0.0.1:8000
+```
 
-## Frontend Setup
+Swagger docs:
 
-Frontend tarafını çalıştırmak için aşağıdaki adımları izleyin:
+```text
+http://127.0.0.1:8000/docs
+```
 
-- frontend klasörüne girin
-- bağımlılıkları yükleyin
-- Vite geliştirme sunucusunu başlatın
+### 3. Frontend setup
 
-Örnek komut sırası:
+Open a new terminal:
 
-- `cd frontend`
-- `npm install`
-- `npm run dev`
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend default local URL:
+
+```text
+http://127.0.0.1:5173
+```
+
+## Environment Variables
+
+Example backend environment values:
+
+```env
+APP_NAME=Appointly
+ENVIRONMENT=dev
+DEBUG=true
+DATABASE_URL=postgresql+psycopg://YOUR_USER:YOUR_PASSWORD@localhost:5433/appointly
+SECRET_KEY=replace-with-a-long-random-secret
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=480
+ALLOWED_ORIGINS=http://localhost:5173
+```
+
+## API Notes
+
+### Auth endpoints
+- `POST /auth/register`
+- `POST /auth/login`
+
+### Main resource endpoints
+- `GET /customers/`
+- `POST /customers/`
+- `PATCH /customers/{customer_id}`
+- `DELETE /customers/{customer_id}`
+- `GET /appointments/`
+- `POST /appointments/`
+- `PATCH /appointments/{appointment_id}`
+- `PATCH /appointments/{appointment_id}/status`
+- `DELETE /appointments/{appointment_id}`
+
+### Pagination format
+
+List endpoints return:
+
+```json
+{
+  "items": [],
+  "total": 0,
+  "limit": 50,
+  "offset": 0
+}
+```
 
 ## Current Status
 
-Proje şu anda çalışan bir MVP seviyesindedir.
+The project is beyond simple CRUD MVP level and now includes:
 
-- Customer CRUD işlemleri tamamlandı
-- Appointment CRUD işlemleri tamamlandı
-- PostgreSQL, SQLAlchemy ve Alembic entegrasyonu kuruldu
-- Frontend tarafında arama, filtreleme ve dashboard ekranı eklendi
-- Temel kullanıcı deneyimi iyileştirmeleri uygulandı
+- auth flow
+- owner scoping
+- conflict protection
+- pagination response standardization
+- validation hardening
+- responsive login flow
 
-Gelecek adımlar arasında dil desteği, ek arayüz iyileştirmeleri ve deploy hazırlığı yer almaktadır.
+It is still not a fully finished SaaS product. It is currently a strong portfolio project and a solid technical base for further development.
+
+## Production Checklist
+
+Before real deployment, complete these items:
+
+- Move secrets to a secure environment manager
+- Replace in-memory rate limiting with Redis-backed rate limiting
+- Add refresh token flow
+- Add role model if staff accounts will exist
+- Enforce stricter phone normalization strategy
+- Add test coverage for auth and business rules
+- Add structured logging
+- Add monitoring and error tracking
+- Add Docker setup and deployment pipeline
+- Add HTTPS and reverse proxy configuration
+- Review nullable legacy fields such as `owner_id`
+
+## Next Possible Improvements
+
+- calendar view
+- availability management
+- working hours / break rules
+- service duration templates
+- staff accounts
+- analytics and reporting
+- email or WhatsApp reminders
+
+## License
+
+This project is currently shared for learning and portfolio purposes.
